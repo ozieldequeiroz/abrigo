@@ -6,6 +6,9 @@ import br.com.alura.adopet.api.model.Pet;
 import br.com.alura.adopet.api.repository.AbrigoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,4 +57,23 @@ public class AbrigoService {
             }
         }
     }
+    
+    public void listarPets(String idOuNome, Pet pet) {
+        try {
+            Long id = Long.parseLong(idOuNome);
+            List<Pet> pets = repository.getReferenceById(id).getPets();
+            throw new ValidacaoExpeption("Pet não encontrado");
+        } catch (EntityNotFoundException enfe) {
+        	throw new ValidacaoExpeption(enfe.getMessage());
+        } catch (NumberFormatException e) {
+            try {
+                List<Pet> pets = repository.findByNome(idOuNome).getPets();
+                throw new ValidacaoExpeption("Pet não encontrado");
+            } catch (EntityNotFoundException enfe) {
+            	throw new ValidacaoExpeption(enfe.getMessage());
+            }
+        }
+    }
+    
+    public void listarAbrigos() {}
 }

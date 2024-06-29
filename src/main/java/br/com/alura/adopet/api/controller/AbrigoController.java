@@ -33,7 +33,7 @@ public class AbrigoController {
     @Transactional
     public ResponseEntity<String> cadastrar(@RequestBody @Valid Abrigo abrigo) {
         try {
-            service.cadastrar(abrigo);
+            this.service.cadastrar(abrigo);
             return ResponseEntity.ok().build();
         } catch (ValidacaoExpeption e) {
             return ResponseEntity.badRequest().body("Dados já cadastrados para outro abrigo!");
@@ -42,20 +42,7 @@ public class AbrigoController {
 
     @GetMapping("/{idOuNome}/pets")
     public ResponseEntity<List<Pet>> listarPets(@PathVariable String idOuNome) {
-        try {
-            Long id = Long.parseLong(idOuNome);
-            List<Pet> pets = repository.getReferenceById(id).getPets();
-            return ResponseEntity.ok(pets);
-        } catch (EntityNotFoundException enfe) {
-            return ResponseEntity.notFound().build();
-        } catch (NumberFormatException e) {
-            try {
-                List<Pet> pets = repository.findByNome(idOuNome).getPets();
-                return ResponseEntity.ok(pets);
-            } catch (EntityNotFoundException enfe) {
-                return ResponseEntity.notFound().build();
-            }
-        }
+ 
     }
 
     @PostMapping("/{idOuNome}/pets")
@@ -63,7 +50,7 @@ public class AbrigoController {
     public ResponseEntity<String> cadastrarPet(@PathVariable String idOuNome, @RequestBody @Valid Pet pet) {
 
         try {
-            service.cadastrarPet(idOuNome, pet);
+            this.service.cadastrarPet(idOuNome, pet);
             ResponseEntity.ok("Pet Cadastrado");
         } catch (EntityNotFoundException enfe) {
             return ResponseEntity.badRequest().body(enfe.getMessage());
