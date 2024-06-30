@@ -7,6 +7,8 @@ import br.com.alura.adopet.api.repository.AbrigoRepository;
 import br.com.alura.adopet.api.service.AbrigoService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +43,15 @@ public class AbrigoController {
     }
 
     @GetMapping("/{idOuNome}/pets")
-    public ResponseEntity<List<Pet>> listarPets(@PathVariable String idOuNome) {
- 
+    public ResponseEntity<String> listarPets(@PathVariable String idOuNome,@RequestBody @Valid Pet pet) {
+    	
+    	try {
+    		this.service.listarPets(idOuNome, pet);
+    		return ResponseEntity.ok().build();
+		} catch (ValidationException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+    		
     }
 
     @PostMapping("/{idOuNome}/pets")
